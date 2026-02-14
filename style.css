@@ -247,6 +247,7 @@
             align-items: center;
             opacity: 0;
             transition: var(--transition);
+            display: flex;
         }
         
         .auth-modal.active {
