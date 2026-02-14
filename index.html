@@ -101,7 +101,7 @@
         <div class="cart-footer">
             <div class="cart-total">
                 <span>المجموع الكلي:</span>
-                <span id="cartTotal">0 ر.س</span>
+                <span id="cartTotal">0 ج.م</span>
             </div>
             <button class="checkout-btn" id="checkoutBtn">إتمام الشراء</button>
         </div>
@@ -116,7 +116,7 @@
                     <a href="#"><i class="fas fa-envelope"></i> info@rmb.com</a>
                 </div>
                 <div class="header-top-links">
-                    <a href="#"><i class="fas fa-truck"></i> توصيل مجاني للطلبات فوق 300 ر.س</a>
+                    <a href="#"><i class="fas fa-truck"></i> توصيل مجاني للطلبات فوق 300 ج.م</a>
                 </div>
             </div>
         </div>
@@ -692,8 +692,8 @@
                     <div class="product-info">
                         <h3>${product.name}</h3>
                         <div class="product-price">
-                            <span class="current-price">${product.price.toFixed(2)} ر.س</span>
-                            ${product.oldPrice ? `<span class="old-price">${product.oldPrice.toFixed(2)} ر.س</span>` : ''}
+                            <span class="current-price">${product.price.toFixed(2)} ج.م</span>
+                            ${product.oldPrice ? `<span class="old-price">${product.oldPrice.toFixed(2)} ج.م</span>` : ''}
                         </div>
                         <div class="product-rating">
                             <div class="rating-stars">${stars}</div>
@@ -748,7 +748,7 @@
                     const product = productsData.find(p => p.id === productId);
                     
                     notifications.show(
-                        `${product.name} - السعر: ${product.price} ر.س - التقييم: ${product.rating}/5`,
+                        `${product.name} - السعر: ${product.price} ج.م - التقييم: ${product.rating}/5`,
                         'info',
                         'عرض سريع'
                     );
@@ -818,7 +818,7 @@
                         <p style="color: var(--text-light);">سلة التسوق فارغة</p>
                     </div>
                 `;
-                cartTotal.textContent = '0 ر.س';
+                cartTotal.textContent = '0 ج.م';
                 return;
             }
             
@@ -831,7 +831,7 @@
                         </div>
                         <div class="cart-item-details">
                             <div class="cart-item-title">${item.name}</div>
-                            <div class="cart-item-price">${item.price} ر.س</div>
+                            <div class="cart-item-price">${item.price} ج.م</div>
                             <div class="cart-item-quantity">
                                 <button class="quantity-btn decrease-qty" data-id="${item.id}">-</button>
                                 <span>${item.quantity}</span>
@@ -846,7 +846,7 @@
             });
             
             cartItems.innerHTML = html;
-            cartTotal.textContent = `${store.getCartTotal().toFixed(2)} ر.س`;
+            cartTotal.textContent = `${store.getCartTotal().toFixed(2)} ج.م`;
             
             // إضافة الأحداث
             document.querySelectorAll('.decrease-qty').forEach(btn => {
