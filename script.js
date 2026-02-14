@@ -560,12 +560,34 @@
             });
             
             // ============== أحداث الأزرار ==============
-            
-            // زر المستخدم
-            document.getElementById('userBtn').addEventListener('click', openAuthModal);
+   // زر المستخدم
+            const userBtn = document.getElementById('userBtn');
+            if (userBtn) {
+                userBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('user btn clicked');
+                    openAuthModal();
+                });
+            }
             
             // إغلاق نافذة تسجيل الدخول
-            document.getElementById('closeAuth').addEventListener('click', closeAuthModal);
+            const closeAuth = document.getElementById('closeAuth');
+            if (closeAuth) {
+                closeAuth.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeAuthModal();
+                });
+            }
+            
+            // إغلاق النافذة عند النقر خارجها
+            const authModal = document.getElementById('authModal');
+            if (authModal) {
+                authModal.addEventListener('click', function(e) {
+                    if (e.target === authModal) {
+                        closeAuthModal();
+                    }
+                });
+            }
             
             // تبديل التبويبات في نافذة تسجيل الدخول
             document.querySelectorAll('.auth-tab').forEach(tab => {
@@ -587,82 +609,89 @@
             });
             
             // نموذج تسجيل الدخول
-            document.getElementById('loginForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-                
-                // التحقق من صحة البيانات
-                if (!email || !password) {
-                    notifications.show('الرجاء إدخال البريد الإلكتروني وكلمة المرور', 'error');
-                    return;
-                }
-                
-                // محاكاة تسجيل الدخول
-                const users = JSON.parse(localStorage.getItem('moda_users') || '[]');
-                const user = users.find(u => u.email === email && u.password === password);
-                
-                if (user) {
-                    store.login({ name: user.name, email: user.email });
-                    notifications.show('تم تسجيل الدخول بنجاح', 'success');
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('loginEmail').value;
+                    const password = document.getElementById('loginPassword').value;
+                    
+                    // التحقق من صحة البيانات
+                    if (!email || !password) {
+                        notifications.show('الرجاء إدخال البريد الإلكتروني وكلمة المرور', 'error');
+                        return;
+                    }
+                    
+                    // محاكاة تسجيل الدخول
+                    const users = JSON.parse(localStorage.getItem('moda_users') || '[]');
+                    const user = users.find(u => u.email === email && u.password === password);
+                    
+                    if (user) {
+                        store.login({ name: user.name, email: user.email });
+                        notifications.show('تم تسجيل الدخول بنجاح', 'success');
+                        closeAuthModal();
+                        
+                        // مسح الحقول
+                        document.getElementById('loginEmail').value = '';
+                        document.getElementById('loginPassword').value = '';
+                    } else {
+                        notifications.show('البريد الإلكتروني أو كلمة المرور غير صحيحة', 'error');
+                    }
+                });
+            }
+            
+            // نموذج إنشاء حساب
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const name = document.getElementById('registerName').value;
+                    const email = document.getElementById('registerEmail').value;
+                    const password = document.getElementById('registerPassword').value;
+                    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+                    
+                    // التحقق من صحة البيانات
+                    if (!name || !email || !password || !confirmPassword) {
+                        notifications.show('الرجاء ملء جميع الحقول', 'error');
+                        return;
+                    }
+                    
+                    if (password !== confirmPassword) {
+                        notifications.show('كلمة المرور غير متطابقة', 'error');
+                        return;
+                    }
+                    
+                    if (password.length < 6) {
+                        notifications.show('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                        return;
+                    }
+                    
+                    // حفظ المستخدم
+                    const users = JSON.parse(localStorage.getItem('moda_users') || '[]');
+                    
+                    if (users.some(u => u.email === email)) {
+                        notifications.show('البريد الإلكتروني مستخدم بالفعل', 'error');
+                        return;
+                    }
+                    
+                    const newUser = { name, email, password };
+                    users.push(newUser);
+                    localStorage.setItem('moda_users', JSON.stringify(users));
+                    
+                    store.login(newUser);
+                    notifications.show('تم إنشاء الحساب بنجاح', 'success');
                     closeAuthModal();
                     
                     // مسح الحقول
-                    document.getElementById('loginEmail').value = '';
-                    document.getElementById('loginPassword').value = '';
-                } else {
-                    notifications.show('البريد الإلكتروني أو كلمة المرور غير صحيحة', 'error');
-                }
-            });
+                    document.getElementById('registerName').value = '';
+                    document.getElementById('registerEmail').value = '';
+                    document.getElementById('registerPassword').value = '';
+                    document.getElementById('registerConfirmPassword').value = '';
+                });
+            }
             
-            // نموذج إنشاء حساب
-            document.getElementById('registerForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const name = document.getElementById('registerName').value;
-                const email = document.getElementById('registerEmail').value;
-                const password = document.getElementById('registerPassword').value;
-                const confirmPassword = document.getElementById('registerConfirmPassword').value;
-                
-                // التحقق من صحة البيانات
-                if (!name || !email || !password || !confirmPassword) {
-                    notifications.show('الرجاء ملء جميع الحقول', 'error');
-                    return;
-                }
-                
-                if (password !== confirmPassword) {
-                    notifications.show('كلمة المرور غير متطابقة', 'error');
-                    return;
-                }
-                
-                if (password.length < 6) {
-                    notifications.show('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
-                    return;
-                }
-                
-                // حفظ المستخدم
-                const users = JSON.parse(localStorage.getItem('moda_users') || '[]');
-                
-                if (users.some(u => u.email === email)) {
-                    notifications.show('البريد الإلكتروني مستخدم بالفعل', 'error');
-                    return;
-                }
-                
-                const newUser = { name, email, password };
-                users.push(newUser);
-                localStorage.setItem('moda_users', JSON.stringify(users));
-                
-                store.login(newUser);
-                notifications.show('تم إنشاء الحساب بنجاح', 'success');
-                closeAuthModal();
-                
-                // مسح الحقول
-                document.getElementById('registerName').value = '';
-                document.getElementById('registerEmail').value = '';
-                document.getElementById('registerPassword').value = '';
-                document.getElementById('registerConfirmPassword').value = '';
-            });
             
             // زر السلة
             document.getElementById('cartBtn').addEventListener('click', function() {
