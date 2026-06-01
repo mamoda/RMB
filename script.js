@@ -223,7 +223,7 @@
                 rating: 4.8,
                 badge: "الأكثر مبيعاً",
                 category: "men",
-                image: "images/1.png"
+                image: "images/Untitled design_20260601_155001_0000.png"
             },
             {
                 id: 2,
